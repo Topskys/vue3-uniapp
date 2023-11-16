@@ -13,6 +13,20 @@ export type PageResult<T> = {
  * 通用分页参数
  */
 export type PageParams = {
-    page?:number
-    pageSize?:number
+    page?: number
+    pageSize?: number
+}
+
+/**
+ * 商品类型
+ */
+export type GoodsItem = {
+    desc: string
+    discount: number // 折扣
+    id: string
+    name: string
+    price: number
+    orderNum: number // 商品已下单数量
+    picture: string
+
 }

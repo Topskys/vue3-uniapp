@@ -1,3 +1,4 @@
+import type { GoodItem } from "./global";
 
 /**
  * 首页-广告类型-小程序
@@ -34,12 +35,4 @@ export type HotItem = {
 /**
  * 猜你喜欢-商品类型
  */
-export type GuessItem = {
-    desc: string
-    discount: number // 折扣
-    id: string
-    name: string
-    price: number
-    orderNum: number // 商品已下单数量
-    picture: string
-}
+export type GuessItem = GoodItem

@@ -134,6 +134,7 @@ defineExpose({
             height: 75rpx;
             margin: 10rpx 0;
             color: #262626;
+            font-size: 28rpx;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;

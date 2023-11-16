@@ -14,7 +14,7 @@ defineProps<{ hots: HotItem[] }>();
                 <text class="title-text">{{ item.title }}</text>
                 <text class="title-desc">{{ item.alt }}</text>
             </view>
-            <navigator url="/pages/recommend/recommend" hover-class="none" class="cards">
+            <navigator :url="`/pages/hot/hot?type=${item.type}`" hover-class="none" class="cards">
                 <image :src="child" mode="aspectFit" class="image" v-for="child, ci in item.pictures" :key="child" />
             </navigator>
         </view>
