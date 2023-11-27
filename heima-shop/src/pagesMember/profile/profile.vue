@@ -9,19 +9,48 @@ import type ProfileDetail from '@/types/member';
 const { safeAreaInsets } = uni.getSystemInfoSync();
 const profile = ref<ProfileDetail>();
 
+
 // 获取个人信息
 const getMemberProfileData = async () => {
   const res = await getMemberProfile();
+  profile.value = res.result;
+}
 
+// 点击修改头像事件
+const onAvatarChange = () => {
+  // 调用拍照或选择图片
+  uni.chooseMedia({
+    count: 1, // 选择文件个数
+    mediaType: ['image'], // 媒体类型
+    success: (res) => {
+      const { tempFilePath } = res.tempFiles[0];
+      // 上传文件
+      uni.uploadFile({
+        url: '/member/profile/avatar',
+        filePath: tempFilePath,
+        name: 'file',
+        success: (res) => {
+          if (res.statusCode === 200) {
+            const avatar = JSON.parse(res.data).result.avatar;
+            // 更新头像
+            profile.value!.avatar = avatar;
+            uni.showToast({ icon: 'success', title: '头像更新成功' })
+          } else {
+            uni.showToast({ icon: 'error', title: '头像更新失败' })
+          }
+        }
+      })
+    },
+  })
 }
 
 
 
 
 
-
-
-onLoad(() => { })
+onLoad(() => {
+  getMemberProfileData();
+})
 
 </script>
 
