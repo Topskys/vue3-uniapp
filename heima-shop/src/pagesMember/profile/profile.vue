@@ -5,7 +5,6 @@ import { onLoad } from '@dcloudio/uni-app';
 import { formatDate } from '@/utils';
 import type { Gender, ProfileDetail } from '@/types/member';
 import { getMemberProfile, putMemberProfile } from '@/services/profile';
-git commit -m "feat：会员中心-个人信息页修改个人信息（上传头像、双向绑定、radio单选按钮、picker日期/城市选择器、同步头像昵称信息）"
 
 
 // init state
