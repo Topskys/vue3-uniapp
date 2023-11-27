@@ -108,7 +108,20 @@
 					"style": {
 						"navigationBarTitleText": "设置"
 					}
+				},
+				{
+					"path": "profile/profile",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "个人信息"
+					}
 				}
+				// ,{
+				// 	"path": "address/address",
+				// 	"style": {
+				// 		"navigationBarTitleText": "地址管理"
+				// 	}
+				// },
 			]
 		}
 	],
