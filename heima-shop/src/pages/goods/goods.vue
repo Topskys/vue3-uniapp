@@ -42,7 +42,7 @@ const query = defineProps<{ id: string }>();
           hover-class="none"
           :url="`/pages/goods/goods?id=${goods}`"
         >
-          <image class="image" :src="" />
+          <!-- <image class="image" :src="" /> -->
         </navigator>
       </view>
     </view>

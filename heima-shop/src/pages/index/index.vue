@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import { onLoad } from '@dcloudio/uni-app';
+import HotPanel from './components/HotPanel.vue';
 import CustomNavbar from './components/CustomNavbar.vue';
 import CategoryPanel from './components/CategoryPanel.vue';
-import HotPanel from './components/HotPanel.vue';
+import type { XtsGuessInstance } from '@/types/components';
+import PageSkeleton from './components/PageSkeleton.vue';
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home';
 import { getHomeBanner, getHomeCategory, getHomeHot } from '@/services/home';
-import type { XtsGuessInstance } from '@/types/component';
+import { useGuessList } from '@/composables';
+
+
 
 
 
@@ -15,8 +19,8 @@ import type { XtsGuessInstance } from '@/types/component';
 const banners = ref<BannerItem[]>([]);
 const categories = ref<CategoryItem[]>([]);
 const hots = ref<HotItem[]>([]);
-const guessRef = ref<XtsGuessInstance>();
 const refresherTriggered = ref(false); // refresh状态
+const isLoading = ref(false); // 是否正在加载中，是则显示骨架屏组件
 
 
 // 获取数据函数
@@ -37,10 +41,8 @@ const getHomeHotData = async () => {
 
 
 // 滚动触底分页
-const onScrolltolower = () => {
-  // 调用猜你喜欢组件的方法
-  guessRef.value?.getMore();
-}
+const { guessRef, onScrolltolower } = useGuessList();
+
 
 /**
  * 下拉刷新数据
@@ -61,11 +63,15 @@ const onRefresh = async () => {
 
 
 // 周期函数
-onLoad(() => {
+onLoad(async () => {
   // 发起请求
-  getHomeBannerData();
-  getHomeCategoryData();
-  getHomeHotData();
+  isLoading.value = true;
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+  ])
+  isLoading.value = false;
 })
 </script>
 
@@ -75,14 +81,18 @@ onLoad(() => {
   <!-- scroll -->
   <scroll-view scroll-y refresher-enabled :refresher-triggered="refresherTriggered" class="scroll-view"
     @scrolltolower="onScrolltolower" @refresherrefresh="onRefresh">
-    <!-- carousel -->
-    <XtsSwiper :banners="banners" />
-    <!-- CategoryPanel -->
-    <CategoryPanel :categories="categories" />
-    <!-- HotPanel -->
-    <HotPanel :hots="hots" />
-    <!-- XtsGuess -->
-    <XtsGuess ref="guessRef" />
+    <!-- skeleton -->
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <!-- carousel -->
+      <XtsSwiper :banners="banners" />
+      <!-- CategoryPanel -->
+      <CategoryPanel :categories="categories" />
+      <!-- HotPanel -->
+      <HotPanel :hots="hots" />
+      <!-- XtsGuess -->
+      <XtsGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 

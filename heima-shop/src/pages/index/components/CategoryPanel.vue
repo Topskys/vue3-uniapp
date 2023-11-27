@@ -22,7 +22,7 @@ defineProps<{ categories: CategoryItem[] }>();
     min-height: 328rpx;
 
     .category-item {
-        // width: 20%;
+        width: 20%;
         display: flex;
         justify-content: center;
         flex-direction: column;

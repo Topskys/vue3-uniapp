@@ -94,5 +94,6 @@
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
     "vue-tsc": "^1.8.8"
-  }
+  },
+  "__npminstall_done": false
 }
