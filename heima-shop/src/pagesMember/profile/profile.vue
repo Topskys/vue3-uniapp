@@ -1,19 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
-import { getMemberProfile } from '@/services/profile';
-import type ProfileDetail from '@/types/member';
+import { formatDate } from '@/utils';
+import type { Gender, ProfileDetail } from '@/types/member';
+import { getMemberProfile, putMemberProfile } from '@/services/profile';
+git commit -m "feat：会员中心-个人信息页修改个人信息（上传头像、双向绑定、radio单选按钮、picker日期/城市选择器、同步头像昵称信息）"
 
 
-
+// init state
 const { safeAreaInsets } = uni.getSystemInfoSync();
-const profile = ref<ProfileDetail>();
+const profile = ref({} as ProfileDetail); // 修改个人信息需要提供初始值
+const memberStore = useMemberStore();
 
 
 // 获取个人信息
 const getMemberProfileData = async () => {
   const res = await getMemberProfile();
   profile.value = res.result;
+  // 同步 Store 的头像和昵称，用于我的页面展示
+  memberStore.profile!.avatar = res.result.avatar
+  memberStore.profile!.nickname = res.result.nickname
 }
 
 // 点击修改头像事件
@@ -34,9 +41,11 @@ const onAvatarChange = () => {
             const avatar = JSON.parse(res.data).result.avatar;
             // 更新头像
             profile.value!.avatar = avatar;
-            uni.showToast({ icon: 'success', title: '头像更新成功' })
+            // 更新 Store 的头像
+            memberStore.profile!.avatar = avatar;
+            uni.showToast({ icon: 'success', title: '头像更新成功' });
           } else {
-            uni.showToast({ icon: 'error', title: '头像更新失败' })
+            uni.showToast({ icon: 'error', title: '头像更新失败' });
           }
         }
       })
@@ -45,7 +54,45 @@ const onAvatarChange = () => {
 }
 
 
+// 修改性别
+const onGenderChange: UniHelper.RadioGroupOnChange = (e) => {
+  profile.value!.gender = e.detail.value as Gender;
+}
 
+// 修改生日
+const onBirthdayChange: UniHelper.DatePickerOnChange = (e) => {
+  profile.value!.birthday = e.detail.value;
+}
+
+// 修改城市
+let fullLocationCode: [string, string, string] = ['', '', ''];
+const onFullLocationChange: UniHelper.RegionPickerOnChange = (ev) => {
+  // 修改前端界面
+  profile.value.fullLocation = ev.detail.value.join(' ');
+  // 提交后端更新
+  fullLocationCode = ev.detail.code!;
+}
+
+// 提交修改
+const onSubmit = async () => {
+  // 更新个人信息
+  const { nickname, gender, birthday, profession } = profile.value
+  const res = await putMemberProfile({
+    nickname,
+    gender,
+    birthday,
+    profession,
+    provinceCode: fullLocationCode[0] || undefined,
+    cityCode: fullLocationCode[1] || undefined,
+    countyCode: fullLocationCode[2] || undefined,
+  });
+  // 更新Store昵称
+  memberStore.profile!.nickname = res.result.nickname;
+  uni.showToast({ icon: 'success', title: '保存成功' });
+  setTimeout(() => {
+    uni.navigateBack();
+  }, 400)
+}
 
 
 onLoad(() => {
