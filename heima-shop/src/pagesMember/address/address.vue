@@ -12,8 +12,8 @@ const addressList = ref<AddressItem[]>([]);
 
 // 获取收货地址列表数据
 const getMemberAddressData = async () => {
-    const res = await getMemberAddress()
-    addressList.value = res.result
+    const res = await getMemberAddress();
+    addressList.value = res.result;
 }
 
 // 删除收货地址
@@ -25,9 +25,9 @@ const onDeleteAddress = (id: string) => {
         success: async (res) => {
             if (res.confirm) {
                 // 根据id删除收货地址
-                await deleteMemberAddressById(id)
+                await deleteMemberAddressById(id);
                 // 重新获取收货地址列表
-                getMemberAddressData()
+                getMemberAddressData();
             }
         },
     })
@@ -36,10 +36,10 @@ const onDeleteAddress = (id: string) => {
 // 修改收货地址
 const onChangeAddress = (item: AddressItem) => {
     // 修改地址
-    const addressStore = useAddressStore()
-    addressStore.changeSelectedAddress(item)
+    const addressStore = useAddressStore();
+    addressStore.changeSelectedAddress(item);
     // 返回上一页
-    uni.navigateBack()
+    uni.navigateBack();
 }
 
 
