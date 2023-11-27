@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { formatDate } from '@/utils';
 import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
-import { formatDate } from '@/utils';
 import type { Gender, ProfileDetail } from '@/types/member';
 import { getMemberProfile, putMemberProfile } from '@/services/profile';
 

@@ -19,10 +19,6 @@ const orderTypes = [
 const memberStore = useMemberStore();
 const { guessRef, onScrolltolower } = useGuessList();
 
-
-
-
-
 </script>
 
 <template>

@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { deleteMemberAddressById, getMemberAddress } from '@/services/address'
-import { useAddressStore } from '@/stores/modules/address'
-import type { AddressItem } from '@/types/address'
-import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { onShow } from '@dcloudio/uni-app';
+import type { AddressItem } from '@/types/address';
+import { useAddressStore } from '@/stores/modules/address';
+import { deleteMemberAddressById, getMemberAddress } from '@/services/address';
+
 
 // 获取收货地址列表数据
-const addressList = ref<AddressItem[]>([])
+const addressList = ref<AddressItem[]>([]);
+
+
+// 获取收货地址列表数据
 const getMemberAddressData = async () => {
     const res = await getMemberAddress()
     addressList.value = res.result
 }
-
-// 初始化调用(页面显示)
-onShow(() => {
-    getMemberAddressData()
-})
 
 // 删除收货地址
 const onDeleteAddress = (id: string) => {
@@ -42,6 +41,13 @@ const onChangeAddress = (item: AddressItem) => {
     // 返回上一页
     uni.navigateBack()
 }
+
+
+
+// 初始化调用(页面显示)
+onShow(() => {
+    getMemberAddressData()
+})
 </script>
 
 <template>

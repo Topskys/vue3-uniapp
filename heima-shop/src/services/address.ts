@@ -1,5 +1,6 @@
-import type { AddressItem, AddressParams } from '@/types/address'
-import { http } from '@/utils/http'
+import { http } from '@/utils/http';
+import type { AddressItem, AddressParams } from '@/types/address';
+
 
 /**
  * 添加收货地址
