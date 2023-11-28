@@ -64,7 +64,7 @@ defineExpose({
         <text class="text">猜你喜欢</text>
     </view>
     <view class="guess">
-        <navigator class="guess-item" :url="`/pages/goods/goods`" hover-class="none" v-for="item, i in guessList"
+        <navigator class="guess-item" :url="`/pages/goods/goods?id=${item.id}`" hover-class="none" v-for="item, i in guessList"
             :key="item.id">
             <image :src="item.picture" mode="aspectFit" class="image" />
             <view class="name">{{ item.name }}</view>
