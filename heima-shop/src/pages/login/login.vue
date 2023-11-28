@@ -31,7 +31,10 @@ const loginSuccess = (profile: LoginResult) => {
   memberStore.setProfile(profile);
   // 提示登录成功，并实现页面跳转
   uni.showToast({ icon: 'none', title: "登录成功" });
-  setTimeout(() => uni.switchTab({ url: '/pages/my/my' }), 1000);
+  setTimeout(() =>
+    // uni.switchTab({ url: '/pages/my/my' })
+    uni.navigateBack()
+    , 500);
 }
 
 

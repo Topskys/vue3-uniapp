@@ -1,58 +1,36 @@
 <!-- 步进器 -->
 <template>
 	<view class="vk-data-input-number-box">
-		<view
-			class="u-icon-minus"
-			:class="{ 'u-icon-disabled': disabled || inputVal <= min }"
-			:style="{
-				background: bgColor,
-				height: inputHeight + 'rpx',
-				color: color,
-				fontSize: size + 'rpx',
-				minHeight: '1.4em'
-			}"
-			@click="emptyClick"
-			@touchstart.prevent="btnTouchStart('minus')"
-			@touchend.stop.prevent="clearTimer"
-		>
+		<view class="u-icon-minus" :class="{ 'u-icon-disabled': disabled || inputVal <= min }" :style="{
+			background: bgColor,
+			height: inputHeight + 'rpx',
+			color: color,
+			fontSize: size + 'rpx',
+			minHeight: '1.4em'
+		}" @click="emptyClick" @touchstart.prevent="btnTouchStart('minus')" @touchend.stop.prevent="clearTimer">
 			<view :style="'font-size:' + (Number(size) + 10) + 'rpx'" class="num-btn">－</view>
 		</view>
-		<input
-			v-model="inputVal"
-			:disabled="disabledInput || disabled"
-			:cursor-spacing="getCursorSpacing"
-			:class="{ 'u-input-disabled': disabled }"
-			class="u-number-input"
-			type="number"
-			:style="{
+		<input v-model="inputVal" :disabled="disabledInput || disabled" :cursor-spacing="getCursorSpacing"
+			:class="{ 'u-input-disabled': disabled }" class="u-number-input" type="number" :style="{
 				color: color,
 				fontSize: size + 'rpx',
 				background: bgColor,
 				height: inputHeight + 'rpx',
 				width: inputWidth + 'rpx'
-			}"
-			@blur="onBlur"
-			@click="showInput=true"
-		/>
-		<view
-			class="u-icon-plus"
-			:class="{ 'u-icon-disabled': disabled || inputVal >= max }"
-			:style="{
-				background: bgColor,
-				height: inputHeight + 'rpx',
-				color: color,
-				fontSize: size + 'rpx',
-				minHeight: '1.4em'
-			}"
-			@click="emptyClick"
-			@touchstart.prevent="btnTouchStart('plus')"
-			@touchend.stop.prevent="clearTimer"
-		>
+			}" @blur="onBlur" @click="showInput = true" />
+		<view class="u-icon-plus" :class="{ 'u-icon-disabled': disabled || inputVal >= max }" :style="{
+			background: bgColor,
+			height: inputHeight + 'rpx',
+			color: color,
+			fontSize: size + 'rpx',
+			minHeight: '1.4em'
+		}" @click="emptyClick" @touchstart.prevent="btnTouchStart('plus')" @touchend.stop.prevent="clearTimer">
 			<view :style="'font-size:' + (Number(size) + 10) + 'rpx'" class="num-btn">＋</view>
 		</view>
 	</view>
 </template>
 <script>
+/* eslint-disable */
 /**
  * numberBox 步进器（此为uview组件改造）
  * @description 该组件一般用于商城购物选择物品数量的场景。注意：该输入框只能输入大于或等于0的整数，不支持小数输入
@@ -188,7 +166,7 @@ export default {
 				// 因为inputVal变化后，会触发this.handleChange()，在其中changeFromInner会再次被设置为true，
 				// 造成外面修改值，也导致被认为是内部修改的混乱，这里进行this.$nextTick延时，保证在运行周期的最后处
 				// 将changeFromInner设置为false
-				this.$nextTick(function() {
+				this.$nextTick(function () {
 					this.changeFromInner = false;
 				});
 			}
@@ -233,8 +211,8 @@ export default {
 			inputVal: 1, // 输入框中的值，不能直接使用props中的value，因为应该改变props的状态
 			timer: null, // 用作长按的定时器
 			changeFromInner: false, // 值发生变化，是来自内部还是外部
-			innerChangeTimer: null ,// 内部定时器
-			showInput:false,
+			innerChangeTimer: null,// 内部定时器
+			showInput: false,
 		};
 	},
 	created() {
@@ -257,8 +235,8 @@ export default {
 	},
 	methods: {
 		// 空点击事件，主要用于解决PC端H5由于无click事件导致触摸位置不准确的问题
-		emptyClick(){
-			
+		emptyClick() {
+
 		},
 		// 触摸事件开始
 		btnTouchStart(callback) {
@@ -466,6 +444,7 @@ export default {
 	color: #c8c9cc !important;
 	background-color: #f2f3f5 !important;
 }
+
 .num-btn {
 	font-weight: 550;
 	line-height: 50rpx;
