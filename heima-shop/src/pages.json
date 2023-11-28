@@ -147,6 +147,17 @@
 					}
 				}
 			]
+		},
+		{
+			"root": "pagesOrder/detail",
+			"pages": [
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				}
+			]
 		}
 	],
 	// 分包预下载规则
