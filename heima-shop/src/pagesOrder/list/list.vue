@@ -5,7 +5,7 @@ import OrderList from './components/OrderList.vue'
 // 获取页面参数
 const query = defineProps<{
   type: string
-}>()
+}>();
 
 // tabs 数据
 const orderTabs = ref([
@@ -14,12 +14,12 @@ const orderTabs = ref([
   { orderState: 2, title: '待发货', isRender: false },
   { orderState: 3, title: '待收货', isRender: false },
   { orderState: 4, title: '待评价', isRender: false },
-])
+]);
 
 // 高亮下标
-const activeIndex = ref(orderTabs.value.findIndex((v) => v.orderState === Number(query.type)))
+const activeIndex = ref(orderTabs.value.findIndex((v) => v.orderState === Number(query.type)));
 // 默认渲染容器
-orderTabs.value[activeIndex.value].isRender = true
+orderTabs.value[activeIndex.value].isRender = true;
 </script>
 
 <template>

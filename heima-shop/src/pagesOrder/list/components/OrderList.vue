@@ -135,7 +135,7 @@ const onRefresherrefresh = async () => {
     orderList.value = []
     isFinish.value = false
     // 加载数据
-    await getMemberOrderData()
+    await getMemberOrderData();
     // 关闭动画
     isTriggered.value = false
 }

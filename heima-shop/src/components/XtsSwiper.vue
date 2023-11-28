@@ -46,48 +46,5 @@ const onChange: UniHelper.SwiperOnChange = (e) => {
 </template>
 
 <style lang="scss">
-$white: #ffffff;
-
-:host {
-    display: block;
-    height: 280rpx;
-}
-
-.image {
-    width: 100%;
-    height: 100%;
-}
-
-.carousel {
-    height: 280rpx;
-    position: relative;
-    overflow: hidden;
-    transform: translateY(0);
-    background-color: #efefef;
-
-    .navigator {
-        height: 100%;
-    }
-
-    .indicator {
-        position: absolute;
-        bottom: 16rpx;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: center;
-
-        .dot {
-            width: 30rpx;
-            height: 6rpx;
-            margin: 0 8rpx;
-            border-radius: 6rpx;
-            background-color: rgba($color: #ffffff, $alpha: .4);
-        }
-
-        .active {
-            background-color: $white;
-        }
-    }
-}
+@import '@/components/styles/XtsSwiper.scss';
 </style>

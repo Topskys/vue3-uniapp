@@ -63,6 +63,12 @@
 			"style": {
 				"navigationBarTitleText": "购物车"
 			}
+		},
+		{
+			"path": "pages/login/protocal.vue",
+			"style": {
+				"navigationBarTitleText": "protocal.vue"
+			}
 		}
 	],
 	"globalStyle": {
@@ -160,7 +166,7 @@
 					}
 				},
 				{
-					"path": "list",
+					"path": "list/list",
 					"style": {
 						"navigationBarTitleText": "订单列表"
 					}

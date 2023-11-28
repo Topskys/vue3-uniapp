@@ -1,61 +1,95 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useMemberStore } from '@/stores';
-import { onLoad } from '@dcloudio/uni-app';
-import type { LoginResult } from '@/types/member';
-import { postLoginAPI, postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/services/login';
+import { postLoginAPI, postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/services/login'
+import { useMemberStore } from '@/stores'
+import type { LoginResult } from '@/types/member'
+import { onLoad } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 
-// init state
-let code = '';
-
-
-
-// 获取用户手机号码（微信对于个人开发者不开放）
-const getPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (e) => {
-  const encryptedData = e.detail!.encryptedData!;
-  const iv = e.detail!.iv!;
-  const res = await postLoginWxMinAPI({ code, encryptedData, iv });
-  loginSuccess(res.result);
-}
-
-// 模拟获取用户手机号码进行登录（个人开发者联系使用）
-const onGetphonenumberSimple = async () => {
-  const res = await postLoginWxMinSimpleAPI('13123456789');
-  loginSuccess(res.result);
-}
-
-// 登录成功信息处理函数
-const loginSuccess = (profile: LoginResult) => {
-  // 保存会员信息
-  const memberStore = useMemberStore();
-  memberStore.setProfile(profile);
-  // 提示登录成功，并实现页面跳转
-  uni.showToast({ icon: 'none', title: "登录成功" });
-  setTimeout(() =>
-    // uni.switchTab({ url: '/pages/my/my' })
-    uni.navigateBack()
-    , 500);
-}
-
-
-
-
-
-
-
-
+// #ifdef MP-WEIXIN
+// 获取 code 登录凭证
+let code = ''
 onLoad(async () => {
-  // 获取code登录凭证
-  const res = await wx.login();
-  code = res.code;
+  const res = await wx.login()
+  code = res.code
 })
 
+// 获取用户手机号码
+const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
+  await checkedAgreePrivacy()
+  const { encryptedData, iv } = ev.detail
+  const res = await postLoginWxMinAPI({ code, encryptedData, iv })
+  loginSuccess(res.result)
+}
+// #endif
+
+// 模拟手机号码快捷登录（开发练习）
+const onGetphonenumberSimple = async () => {
+  await checkedAgreePrivacy()
+  const res = await postLoginWxMinSimpleAPI('13123456789')
+  loginSuccess(res.result)
+}
+
+const loginSuccess = (profile: LoginResult) => {
+  // 保存会员信息
+  const memberStore = useMemberStore()
+  memberStore.setProfile(profile)
+  // 成功提示
+  uni.showToast({ icon: 'success', title: '登录成功' })
+  setTimeout(() => {
+    // 页面跳转
+    // uni.switchTab({ url: '/pages/my/my' })
+    uni.navigateBack()
+  }, 500)
+}
+
+// #ifdef H5
+// 传统表单登录，测试账号：13123456789 密码：123456，测试账号仅开发学习使用。
+const form = ref({
+  account: '13123456789',
+  password: '',
+})
+
+// 表单提交
+const onSubmit = async () => {
+  await checkedAgreePrivacy()
+  const res = await postLoginAPI(form.value)
+  loginSuccess(res.result)
+}
+// #endif
+
+// 请先阅读并勾选协议
+const isAgreePrivacy = ref(false)
+const isAgreePrivacyShakeY = ref(false)
+const checkedAgreePrivacy = async () => {
+  if (!isAgreePrivacy.value) {
+    uni.showToast({
+      icon: 'none',
+      title: '请先阅读并勾选协议',
+    })
+    // 震动提示
+    isAgreePrivacyShakeY.value = true
+    setTimeout(() => {
+      isAgreePrivacyShakeY.value = false
+    }, 500)
+    // 返回错误
+    return Promise.reject(new Error('请先阅读并勾选协议'))
+  }
+}
+
+const onOpenPrivacyContract = () => {
+  // #ifdef MP-WEIXIN
+  // 跳转至隐私协议页面
+  wx.openPrivacyContract({})
+  // #endif
+}
 </script>
 
 <template>
   <view class="viewport">
     <view class="logo">
-      <image src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/logo_icon.png"></image>
+      <image
+        src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/logo_icon.png"
+      ></image>
     </view>
     <view class="login">
       <!-- 网页端表单登录 -->
@@ -68,10 +102,14 @@ onLoad(async () => {
       <!-- 小程序端授权登录 -->
       <!-- #ifdef MP-WEIXIN -->
       <view class="button-privacy-wrap">
-        <button :hidden="isAgreePrivacy" class="button-opacity button phone" @tap="checkedAgreePrivacy">
+        <button
+          :hidden="isAgreePrivacy"
+          class="button-opacity button phone"
+          @tap="checkedAgreePrivacy"
+        >
           请先阅读并勾选协议
         </button>
-        <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber">
+        <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetphonenumber">
           <text class="icon icon-phone"></text>
           手机号快捷登录
         </button>
@@ -116,7 +154,6 @@ page {
 .logo {
   flex: 1;
   text-align: center;
-
   image {
     width: 220rpx;
     height: 220rpx;
@@ -149,7 +186,6 @@ page {
     font-size: 28rpx;
     border-radius: 72rpx;
     color: #fff;
-
     .icon {
       font-size: 40rpx;
       margin-right: 6rpx;
@@ -167,7 +203,6 @@ page {
   .extra {
     flex: 1;
     padding: 70rpx 70rpx 0;
-
     .caption {
       width: 440rpx;
       line-height: 1;
@@ -175,7 +210,6 @@ page {
       font-size: 26rpx;
       color: #999;
       position: relative;
-
       text {
         transform: translate(-40%);
         background-color: #fff;
@@ -190,11 +224,9 @@ page {
       justify-content: center;
       align-items: center;
       margin-top: 70rpx;
-
       button {
         padding: 0;
         background-color: transparent;
-
         &::after {
           border: none;
         }
@@ -220,7 +252,6 @@ page {
         border-radius: 50%;
       }
     }
-
     .icon-weixin::before {
       border-color: #06c05f;
       color: #06c05f;
@@ -232,11 +263,9 @@ page {
   0% {
     transform: translate(0, 0);
   }
-
   50% {
     transform: translate(0, -5rpx);
   }
-
   100% {
     transform: translate(0, 0);
   }
@@ -248,7 +277,6 @@ page {
 
 .button-privacy-wrap {
   position: relative;
-
   .button-opacity {
     opacity: 0;
     position: absolute;
@@ -278,4 +306,3 @@ page {
   }
 }
 </style>
-

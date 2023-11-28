@@ -12,9 +12,6 @@ import { useGuessList } from '@/composables';
 
 
 
-
-
-
 // 定义变量
 const banners = ref<BannerItem[]>([]);
 const categories = ref<CategoryItem[]>([]);
@@ -98,6 +95,9 @@ onLoad(async () => {
 
 <style lang="scss">
 // page为程序根标签 
+/* #ifdef APP-PLUS */
+#app,
+/* #endif */ 
 page {
   height: 100%;
   display: flex;
