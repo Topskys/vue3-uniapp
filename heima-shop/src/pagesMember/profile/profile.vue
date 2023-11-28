@@ -1,80 +1,106 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { formatDate } from '@/utils';
-import { useMemberStore } from '@/stores';
-import { onLoad } from '@dcloudio/uni-app';
-import type { Gender, ProfileDetail } from '@/types/member';
-import { getMemberProfile, putMemberProfile } from '@/services/profile';
+import { getMemberProfile, putMemberProfile } from '@/services/profile'
+import { useMemberStore } from '@/stores'
+import type { Gender, ProfileDetail } from '@/types/member'
+import { formatDate } from '@/utils'
+import { onLoad } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
 
-// init state
-const { safeAreaInsets } = uni.getSystemInfoSync();
-const profile = ref({} as ProfileDetail); // 修改个人信息需要提供初始值
-const memberStore = useMemberStore();
-
-
-// 获取个人信息
+// 获取个人信息，修改个人信息需提供初始值
+const profile = ref({} as ProfileDetail)
 const getMemberProfileData = async () => {
-  const res = await getMemberProfile();
-  profile.value = res.result;
+  const res = await getMemberProfile()
+  profile.value = res.result
   // 同步 Store 的头像和昵称，用于我的页面展示
   memberStore.profile!.avatar = res.result.avatar
   memberStore.profile!.nickname = res.result.nickname
 }
 
-// 点击修改头像事件
+onLoad(() => {
+  getMemberProfileData()
+})
+
+const memberStore = useMemberStore()
+// 修改头像
 const onAvatarChange = () => {
-  // 调用拍照或选择图片
-  uni.chooseMedia({
-    count: 1, // 选择文件个数
-    mediaType: ['image'], // 媒体类型
+  // 调用拍照/选择图片
+  // 选择图片条件编译
+  // #ifdef H5 || APP-PLUS
+  // 微信小程序从基础库 2.21.0 开始， wx.chooseImage 停止维护，请使用 uni.chooseMedia 代替
+  uni.chooseImage({
+    count: 1,
     success: (res) => {
-      const { tempFilePath } = res.tempFiles[0];
-      // 上传文件
-      uni.uploadFile({
-        url: '/member/profile/avatar',
-        filePath: tempFilePath,
-        name: 'file',
-        success: (res) => {
-          if (res.statusCode === 200) {
-            const avatar = JSON.parse(res.data).result.avatar;
-            // 更新头像
-            profile.value!.avatar = avatar;
-            // 更新 Store 的头像
-            memberStore.profile!.avatar = avatar;
-            uni.showToast({ icon: 'success', title: '头像更新成功' });
-          } else {
-            uni.showToast({ icon: 'error', title: '头像更新失败' });
-          }
-        }
-      })
+      // 文件路径
+      const tempFilePaths = res.tempFilePaths
+      // 上传
+      uploadFile(tempFilePaths[0])
+    },
+  })
+  // #endif
+
+  // #ifdef MP-WEIXIN
+  // uni.chooseMedia 仅支持微信小程序端
+  uni.chooseMedia({
+    // 文件个数
+    count: 1,
+    // 文件类型
+    mediaType: ['image'],
+    success: (res) => {
+      // 本地路径
+      const { tempFilePath } = res.tempFiles[0]
+      // 上传
+      uploadFile(tempFilePath)
+    },
+  })
+  // #endif
+}
+
+// 文件上传-兼容小程序端、H5端、App端
+const uploadFile = (file: string) => {
+  // 文件上传
+  uni.uploadFile({
+    url: '/member/profile/avatar',
+    name: 'file',
+    filePath: file,
+    success: (res) => {
+      if (res.statusCode === 200) {
+        const avatar = JSON.parse(res.data).result.avatar
+        // 个人信息页数据更新
+        profile.value.avatar = avatar
+        // Store头像更新
+        memberStore.profile!.avatar = avatar
+        uni.showToast({ icon: 'success', title: '更新成功' })
+      } else {
+        uni.showToast({ icon: 'error', title: '出现错误' })
+      }
     },
   })
 }
 
-
 // 修改性别
-const onGenderChange: UniHelper.RadioGroupOnChange = (e) => {
-  profile.value!.gender = e.detail.value as Gender;
+const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
+  profile.value.gender = ev.detail.value as Gender
 }
 
 // 修改生日
-const onBirthdayChange: UniHelper.DatePickerOnChange = (e) => {
-  profile.value!.birthday = e.detail.value;
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
+  profile.value.birthday = ev.detail.value
 }
 
 // 修改城市
-let fullLocationCode: [string, string, string] = ['', '', ''];
+let fullLocationCode: [string, string, string] = ['', '', '']
 const onFullLocationChange: UniHelper.RegionPickerOnChange = (ev) => {
   // 修改前端界面
-  profile.value.fullLocation = ev.detail.value.join(' ');
+  profile.value.fullLocation = ev.detail.value.join(' ')
   // 提交后端更新
-  fullLocationCode = ev.detail.code!;
+  fullLocationCode = ev.detail.code!
 }
 
-// 提交修改
+// 点击保存提交表单
 const onSubmit = async () => {
-  // 更新个人信息
   const { nickname, gender, birthday, profession } = profile.value
   const res = await putMemberProfile({
     nickname,
@@ -84,22 +110,15 @@ const onSubmit = async () => {
     provinceCode: fullLocationCode[0] || undefined,
     cityCode: fullLocationCode[1] || undefined,
     countyCode: fullLocationCode[2] || undefined,
-  });
+  })
   // 更新Store昵称
-  memberStore.profile!.nickname = res.result.nickname;
-  uni.showToast({ icon: 'success', title: '保存成功' });
+  memberStore.profile!.nickname = res.result.nickname
+  uni.showToast({ icon: 'success', title: '保存成功' })
   setTimeout(() => {
-    uni.navigateBack();
+    uni.navigateBack()
   }, 400)
 }
-
-
-onLoad(() => {
-  getMemberProfileData();
-})
-
 </script>
-
 
 <template>
   <view class="viewport">
@@ -142,8 +161,14 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">生日</text>
-          <picker @change="onBirthdayChange" mode="date" class="picker" :value="profile?.birthday" start="1900-01-01"
-            :end="formatDate(new Date())">
+          <picker
+            @change="onBirthdayChange"
+            mode="date"
+            class="picker"
+            :value="profile?.birthday"
+            start="1900-01-01"
+            :end="formatDate(new Date())"
+          >
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
@@ -152,7 +177,12 @@ onLoad(() => {
         <!-- #ifdef MP-WEIXIN -->
         <view class="form-item">
           <text class="label">城市</text>
-          <picker @change="onFullLocationChange" mode="region" class="picker" :value="profile?.fullLocation?.split(' ')">
+          <picker
+            @change="onFullLocationChange"
+            mode="region"
+            class="picker"
+            :value="profile?.fullLocation?.split(' ')"
+          >
             <view v-if="profile?.fullLocation">{{ profile.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
@@ -282,7 +312,6 @@ page {
     .picker {
       flex: 1;
     }
-
     .placeholder {
       color: #808080;
     }

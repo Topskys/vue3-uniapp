@@ -3,14 +3,14 @@ import type { HotItem } from '@/types/home'
 
 // 定义 props 接收数据
 defineProps<{
-    list: HotItem[]
+    hots: HotItem[]
 }>()
 </script>
 
 <template>
     <!-- 推荐专区 -->
     <view class="panel hot">
-        <view class="item" v-for="item in list" :key="item.id">
+        <view class="item" v-for="item in hots" :key="item.id">
             <view class="title">
                 <text class="title-text">{{ item.title }}</text>
                 <text class="title-desc">{{ item.alt }}</text>
@@ -23,5 +23,5 @@ defineProps<{
 </template>
 
 <style lang="scss">
-@import '../styles/hot.scss';
+@import '../styles/HotPanel.scss';
 </style>

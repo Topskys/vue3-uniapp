@@ -97,7 +97,7 @@ onLoad(async () => {
 // page为程序根标签 
 /* #ifdef APP-PLUS */
 #app,
-/* #endif */ 
+/* #endif */
 page {
   height: 100%;
   display: flex;

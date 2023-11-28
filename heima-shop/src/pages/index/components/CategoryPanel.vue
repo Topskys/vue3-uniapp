@@ -3,13 +3,14 @@ import type { CategoryItem } from '@/types/home'
 
 // 定义 props 接收数据
 defineProps<{
-    list: CategoryItem[]
+    categories: CategoryItem[]
 }>()
 </script>
 
 <template>
     <view class="category">
-        <navigator class="category-item" hover-class="none" url="/pages/index/index" v-for="item in list" :key="item.id">
+        <navigator class="category-item" hover-class="none" url="/pages/index/index" v-for="item in categories"
+            :key="item.id">
             <image class="icon" :src="item.icon"></image>
             <text class="text">{{ item.name }}</text>
         </navigator>
@@ -17,5 +18,5 @@ defineProps<{
 </template>
 
 <style lang="scss">
-@import '../styles/category.scss';
+@import '../styles/CategoryPanel.scss';
 </style>

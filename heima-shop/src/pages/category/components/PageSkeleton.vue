@@ -164,7 +164,7 @@
   <style lang="scss">
   /* #ifdef H5 || APP-PLUS */
   /* 修复 H5 端骨架屏样式异常 */
-  @import '@/components/styles/XtxSwiper.scss';
+  @import '@/components/styles/XtsSwiper.scss';
   @import '../styles/category.scss';
   /* #endif */
   .sk-transparent {
