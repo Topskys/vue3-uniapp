@@ -158,6 +158,12 @@
 					"style": {
 						"navigationBarTitleText": "支付订单"
 					}
+				},
+				{
+					"path": "list",
+					"style": {
+						"navigationBarTitleText": "订单列表"
+					}
 				}
 			]
 		}

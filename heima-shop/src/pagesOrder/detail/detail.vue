@@ -86,7 +86,7 @@ onReady(() => {
 // 获取订单详情
 const order = ref<OrderResult>();
 const getMemberOrderByIdData = async () => {
-  const res = await getMemberOrderById(query.id)
+  const res = await getMemberOrderById(query.id);
   order.value = res.result
   if (
     [OrderState.DaiShouHuo, OrderState.DaiPingJia, OrderState.YiWanCheng].includes(
@@ -98,14 +98,14 @@ const getMemberOrderByIdData = async () => {
 }
 
 // 获取物流信息
-const logisticList = ref<LogisticItem[]>([])
+const logisticList = ref<LogisticItem[]>([]);
 const getMemberOrderLogisticsByIdData = async () => {
-  const res = await getMemberOrderLogisticsById(query.id)
-  logisticList.value = res.result.list
+  const res = await getMemberOrderLogisticsById(query.id);
+  logisticList.value = res.result.list;
 }
 
 onLoad(() => {
-  getMemberOrderByIdData()
+  getMemberOrderByIdData();
 })
 
 // 倒计时结束事件
@@ -140,7 +140,7 @@ const onOrderPay = async () => {
 }
 
 // 是否为开发环境
-const isDev = import.meta.env.DEV
+const isDev = import.meta.env.DEV;
 // 模拟发货
 const onOrderSend = async () => {
   if (isDev) {
@@ -183,13 +183,13 @@ const onOrderDelete = () => {
 // 取消订单
 const onOrderCancel = async () => {
   // 发送请求
-  const res = await getMemberOrderCancelById(query.id, { cancelReason: reason.value })
+  const res = await getMemberOrderCancelById(query.id, { cancelReason: reason.value });
   // 更新订单信息
-  order.value = res.result
+  order.value = res.result;
   // 关闭弹窗
-  popup.value?.close!()
+  popup.value?.close!();
   // 轻提示
-  uni.showToast({ icon: 'none', title: '订单取消成功' })
+  uni.showToast({ icon: 'none', title: '订单取消成功' });
 }
 </script>
 
@@ -306,7 +306,7 @@ const onOrderCancel = async () => {
       </view>
 
       <!-- 猜你喜欢 -->
-      <XtxGuess ref="guessRef" />
+      <XtsGuess ref="guessRef" />
 
       <!-- 底部操作栏 -->
       <view class="toolbar-height" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }"></view>
