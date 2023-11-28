@@ -61,19 +61,19 @@ const getMemberOrderPreData = async () => {
 }
 
 // 收货地址
-const selecteAddress = computed(() => {
+const selectedAddress = computed(() => {
   return addressStore.selectedAddress || orderPre.value?.userAddresses.find((v) => v.isDefault)
 })
 
 // 提交订单
 const onOrderSubmit = async () => {
   // 没有收货地址提醒
-  if (!selecteAddress.value?.id) {
+  if (!selectedAddress.value?.id) {
     return uni.showToast({ icon: 'none', title: '请选择收货地址' })
   }
   // 发送请求
   const res = await postMemberOrder({
-    addressId: selecteAddress.value?.id,
+    addressId: selectedAddress.value?.id,
     buyerMessage: buyerMessage.value,
     deliveryTimeType: activeDelivery.value.type,
     goods: orderPre.value!.goods.map((v) => ({ count: v.count, skuId: v.skuId })),
@@ -93,9 +93,9 @@ onLoad(() => {
 <template>
   <scroll-view enable-back-to-top scroll-y class="viewport">
     <!-- 收货地址 -->
-    <navigator v-if="selecteAddress" class="shipment" hover-class="none" url="/pagesMember/address/address?from=order">
-      <view class="user"> {{ selecteAddress.receiver }} {{ selecteAddress.contact }} </view>
-      <view class="address"> {{ selecteAddress.fullLocation }} {{ selecteAddress.address }} </view>
+    <navigator v-if="selectedAddress" class="shipment" hover-class="none" url="/pagesMember/address/address?from=order">
+      <view class="user"> {{ selectedAddress.receiver }} {{ selectedAddress.contact }} </view>
+      <view class="address"> {{ selectedAddress.fullLocation }} {{ selectedAddress.address }} </view>
       <text class="icon icon-right"></text>
     </navigator>
     <navigator v-else class="shipment" hover-class="none" url="/pagesMember/address/address?from=order">
@@ -152,7 +152,7 @@ onLoad(() => {
     <view class="total-pay symbol">
       <text class="number">{{ orderPre?.summary.totalPayPrice.toFixed(2) }}</text>
     </view>
-    <view class="button" :class="{ disabled: !selecteAddress?.id }" @tap="onOrderSubmit">
+    <view class="button" :class="{ disabled: !selectedAddress?.id }" @tap="onOrderSubmit">
       提交订单
     </view>
   </view>

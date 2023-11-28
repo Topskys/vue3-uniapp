@@ -2,17 +2,19 @@ import type { CartItem } from "@/types/cart";
 import { http } from "@/utils/http";
 
 
+
 /**
  * 加入购物车
- * @param data 
+ * @param data 请求体参数
  */
-export function postMemberCartBySkuId(data: { skuId: string; count: number }) {
+export const postMemberCart = (data: { skuId: string; count: number }) => {
     return http({
-        url: '/member/cart',
         method: 'POST',
-        data
+        url: '/member/cart',
+        data,
     })
 }
+
 
 
 /**
