@@ -43,7 +43,6 @@ export function deleteMemberCart(data: { ids: string[] }) {
  * 修改购物车商品
  * @param skuId SKUID
  * @param data selected 选中状态 count 商品数量
- * @returns 
  */
 export function putMemberCartBySkuId(skuId: string, data: { selected?: boolean, count?: number }) {
     return http({
@@ -54,4 +53,14 @@ export function putMemberCartBySkuId(skuId: string, data: { selected?: boolean, 
 }
 
 
-export function putMemberCartSelected(skuId: string, checked: boolean) { }
+/**
+ * 修改全部选中状态
+ * @param data selected 全部选中状态
+ */
+export function putMemberCartSelected(data: { selected: boolean }) {
+    return http({
+        method: 'PUT',
+        url: '/member/cart/selected',
+        data,
+    })
+}

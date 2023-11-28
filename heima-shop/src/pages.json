@@ -56,6 +56,13 @@
 			"style": {
 				"navigationBarTitleText": "商品详情"
 			}
+		},
+		{
+			// 普通购物车页，用于右上角显示返回按钮
+			"path": "pages/cart/cart2",
+			"style": {
+				"navigationBarTitleText": "购物车"
+			}
 		}
 	],
 	"globalStyle": {
@@ -126,6 +133,17 @@
 					"path": "address-form/address-form",
 					"style": {
 						"navigationBarTitleText": "新增地址"
+					}
+				}
+			]
+		},
+		{
+			"root": "pagesOrder",
+			"pages": [
+				{
+					"path": "create/create",
+					"style": {
+						"navigationBarTitleText": "填写订单"
 					}
 				}
 			]
